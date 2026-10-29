@@ -1,6 +1,6 @@
 import React from 'react';
 import { PersonaScenario } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { 
   Bot, 
   Sparkles, 
