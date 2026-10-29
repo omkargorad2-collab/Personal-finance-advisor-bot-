@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { CircularDonutChart, CircularProgressRing } from './CircularCharts';
 import { 
   TrendingUp, 
