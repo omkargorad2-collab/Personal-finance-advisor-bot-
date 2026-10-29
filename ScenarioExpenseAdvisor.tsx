@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal } from '../types';
-import { evaluateScenarioProfile, ExpenseRemovalCandidate } from '../utils/scenarioAdvisor';
+import { evaluateScenarioProfile } from "./scenarioAdvisor";
 import { 
   Sparkles, 
   Trash2, 
