@@ -1,23 +1,50 @@
+
 import React, { useState, useEffect } from 'react';
-import { PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal, FinancialAuditResult } from './types';
-import { PERSONA_SCENARIOS, INITIAL_SCENARIO_DATA } from './data/mockData';
-import { fetchScenarioState, saveScenarioState, resetScenarioState, requestFinancialAnalysis } from './services/api';
 
-import { Header } from './components/Header';
-import { Dashboard } from './components/Dashboard';
-import { TransactionsView } from './components/TransactionsView';
-import { BudgetPlanner } from './components/BudgetPlanner';
-import { SavingsGoals } from './components/SavingsGoals';
-import { MonthlyReport } from './components/MonthlyReport';
-import { MultiCurrencyView } from './components/MultiCurrencyView';
-import { AiAdvisorBot } from './components/AiAdvisorBot';
-import { DatabaseSchemaView } from './components/DatabaseSchemaView';
-import { TransactionModal } from './components/TransactionModal';
-import { GoalModal } from './components/GoalModal';
-import { CreateProfileModal } from './components/CreateProfileModal';
-import { ResetProfileModal } from './components/ResetProfileModal';
+import {
+  PersonaScenario,
+  Income,
+  Expense,
+  BudgetCategory,
+  SavingsGoal,
+  FinancialAuditResult,
+} from './types';
 
-import { Bot, Sparkles, X, ChevronUp, ChevronDown, Check } from 'lucide-react';
+import {
+  PERSONA_SCENARIOS,
+  INITIAL_SCENARIO_DATA,
+} from './mockData';
+
+import {
+  fetchScenarioState,
+  saveScenarioState,
+  resetScenarioState,
+  requestFinancialAnalysis,
+} from './api';
+
+import { Header } from './Header';
+import { Dashboard } from './Dashboard';
+import { TransactionsView } from './TransactionsView';
+import { BudgetPlanner } from './BudgetPlanner';
+import { SavingsGoals } from './SavingsGoals';
+import { MonthlyReport } from './MonthlyReport';
+import { MultiCurrencyView } from './MultiCurrencyView';
+import { AiAdvisorBot } from './AiAdvisorBot';
+import { DatabaseSchemaView } from './DatabaseSchemaView';
+import { TransactionModal } from './TransactionModal';
+import { GoalModal } from './GoalModal';
+import { CreateProfileModal } from './CreateProfileModal';
+import { ResetProfileModal } from './ResetProfileModal';
+
+import {
+  Bot,
+  Sparkles,
+  X,
+  ChevronUp,
+  ChevronDown,
+  Check,
+} from 'lucide-react';
+
 
 export default function App() {
   const [scenarios, setScenarios] = useState<PersonaScenario[]>(() => {
