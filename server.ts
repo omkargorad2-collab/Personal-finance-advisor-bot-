@@ -12,6 +12,23 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 
+app.use((req, res, next) => {
+  const allowedOrigin = process.env.FRONTEND_URL || '*';
+
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+
+  next();
+});
 // Initialize Google Gen AI client with recommended User-Agent header
 function getAiClient(): GoogleGenAI | null {
   const key = process.env.GEMINI_API_KEY;
