@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Expense, Income, PersonaScenario, BudgetCategory, SavingsGoal } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { ScenarioExpenseAdvisor } from './ScenarioExpenseAdvisor';
 import { 
   PlusCircle, 
