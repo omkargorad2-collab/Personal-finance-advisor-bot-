@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { executeSimulatedSql } from '../services/api';
+import { executeSimulatedSql } from "./api";
 import { Database, Play, Code2, Server, Table, Layers, CheckCircle2, Clock } from 'lucide-react';
 
 interface DatabaseSchemaViewProps {
