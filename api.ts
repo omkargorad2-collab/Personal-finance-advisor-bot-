@@ -1,13 +1,40 @@
-import { Income, Expense, BudgetCategory, SavingsGoal, FinancialAuditResult, CurrencyRateData } from '../types';
+
+import {
+  Income,
+  Expense,
+  BudgetCategory,
+  SavingsGoal,
+  FinancialAuditResult,
+  CurrencyRateData,
+} from './types';
+
+// Vercel frontend can connect to the Render backend using this variable.
+// If both frontend and backend run on the same server, leave it empty.
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || ''
+).replace(/\/+$/, '');
+
+function apiUrl(path: string): string {
+  return `${API_BASE_URL}${path}`;
+}
+
+async function readJson<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    throw new Error(`Request failed: HTTP ${response.status}`);
+  }
+
+  return response.json() as Promise<T>;
+}
 
 export async function fetchScenarioState(scenarioId: string) {
   try {
-    const res = await fetch(`/api/state/${scenarioId}`);
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const json = await res.json();
-    return json.data;
-  } catch (e) {
-    console.warn('Failed to load server state:', e);
+    const response = await fetch(
+      apiUrl(`/api/state/${encodeURIComponent(scenarioId)}`)
+    );
+    const json = await readJson<{ data: any }>(response);
+    return json.data ?? null;
+  } catch (error) {
+    console.warn('Failed to load scenario state:', error);
     return null;
   }
 }
@@ -23,38 +50,68 @@ export async function saveScenarioState(
   }
 ) {
   try {
-    const res = await fetch(`/api/state/${scenarioId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(state),
-    });
-    return await res.json();
-  } catch (e) {
-    console.error('Failed to save server state:', e);
+    const response = await fetch(
+      apiUrl(`/api/state/${encodeURIComponent(scenarioId)}`),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+      }
+    );
+
+    return await readJson<any>(response);
+  } catch (error) {
+    console.error('Failed to save scenario state:', error);
+    return null;
   }
 }
 
 export async function resetScenarioState(scenarioId: string) {
   try {
-    const res = await fetch(`/api/state/reset/${scenarioId}`, {
-      method: 'POST',
-    });
-    return await res.json();
-  } catch (e) {
-    console.error('Failed to reset scenario state:', e);
+    const response = await fetch(
+      apiUrl(`/api/state/reset/${encodeURIComponent(scenarioId)}`),
+      { method: 'POST' }
+    );
+
+    return await readJson<any>(response);
+  } catch (error) {
+    console.error('Failed to reset scenario state:', error);
+    return null;
   }
 }
 
-export async function fetchCurrencyRates(base: string = 'USD'): Promise<CurrencyRateData | null> {
+export async function fetchCurrencyRates(
+  base: string = 'USD'
+): Promise<CurrencyRateData | null> {
   try {
-    const res = await fetch(`/api/currency/rates?base=${encodeURIComponent(base)}`);
-    if (!res.ok) throw new Error('Rates error');
-    return await res.json();
-  } catch (e) {
+    const response = await fetch(
+      apiUrl(`/api/currency/rates?base=${encodeURIComponent(base)}`)
+    );
+
+    return await readJson<CurrencyRateData>(response);
+  } catch (error) {
+    console.warn('Using fallback currency rates:', error);
+
     return {
       base,
-      rates: { USD: 1.0, EUR: 0.92, GBP: 0.79, INR: 83.2, JPY: 154.5, CAD: 1.36, AUD: 1.51, SGD: 1.35, AED: 3.67, CHF: 0.89, CNY: 7.24, BRL: 5.15 },
-      currencies: ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD', 'SGD', 'AED', 'CHF', 'CNY', 'BRL'],
+      rates: {
+        USD: 1,
+        EUR: 0.92,
+        GBP: 0.79,
+        INR: 83.2,
+        JPY: 154.5,
+        CAD: 1.36,
+        AUD: 1.51,
+        SGD: 1.35,
+        AED: 3.67,
+        CHF: 0.89,
+        CNY: 7.24,
+        BRL: 5.15,
+      },
+      currencies: [
+        'USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD',
+        'AUD', 'SGD', 'AED', 'CHF', 'CNY', 'BRL',
+      ],
     };
   }
 }
@@ -65,31 +122,30 @@ export async function sendAdvisorChat(
   financialContext: any
 ): Promise<string> {
   try {
-    const res = await fetch('/api/advisor/chat', {
+    const response = await fetch(apiUrl('/api/advisor/chat'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, history, financialContext }),
     });
-    if (!res.ok) throw new Error('Chat API error');
-    const data = await res.json();
+
+    const data = await readJson<{ reply?: string }>(response);
     return data.reply || 'No response generated.';
-  } catch (e: any) {
-    return `Advisor connection error: ${e.message}. Please verify server connection.`;
+  } catch (error) {
+    console.error('Advisor chat error:', error);
+    return 'Unable to connect to the advisor. Please check the backend connection.';
   }
 }
 
-export async function requestFinancialAnalysis(financialData: any): Promise<FinancialAuditResult> {
-  try {
-    const res = await fetch('/api/advisor/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ financialData }),
-    });
-    if (!res.ok) throw new Error('Analysis API error');
-    return await res.json();
-  } catch (e: any) {
-    throw new Error(e.message || 'Audit failed');
-  }
+export async function requestFinancialAnalysis(
+  financialData: any
+): Promise<FinancialAuditResult> {
+  const response = await fetch(apiUrl('/api/advisor/analyze'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ financialData }),
+  });
+
+  return readJson<FinancialAuditResult>(response);
 }
 
 export async function generateAiBudget(
@@ -97,18 +153,28 @@ export async function generateAiBudget(
   scenarioId: string,
   categories: string[],
   method: string = '50_30_20'
-): Promise<Array<{ category: string; budgetLimit: number; percentage: number; rationale: string }>> {
+): Promise<
+  Array<{
+    category: string;
+    budgetLimit: number;
+    percentage: number;
+    rationale: string;
+  }>
+> {
   try {
-    const res = await fetch('/api/advisor/generate-budget', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ income, scenarioId, categories, method }),
-    });
-    if (!res.ok) throw new Error('Budget generation error');
-    const data = await res.json();
+    const response = await fetch(
+      apiUrl('/api/advisor/generate-budget'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ income, scenarioId, categories, method }),
+      }
+    );
+
+    const data = await readJson<{ budgets?: any[] }>(response);
     return data.budgets || [];
-  } catch (e: any) {
-    console.error('Budget generation error:', e);
+  } catch (error) {
+    console.error('Budget generation error:', error);
     return [];
   }
 }
@@ -120,28 +186,43 @@ export async function fetchPredictiveForecast(
   targetMonths: number = 6
 ) {
   try {
-    const res = await fetch('/api/advisor/forecast', {
+    const response = await fetch(apiUrl('/api/advisor/forecast'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ income, monthlyExpense, currentSavings, targetMonths }),
+      body: JSON.stringify({
+        income,
+        monthlyExpense,
+        currentSavings,
+        targetMonths,
+      }),
     });
-    if (!res.ok) throw new Error('Forecast API error');
-    return await res.json();
-  } catch (e: any) {
-    console.error('Forecast error:', e);
+
+    return await readJson<any>(response);
+  } catch (error) {
+    console.error('Forecast error:', error);
     return null;
   }
 }
 
-export async function executeSimulatedSql(sql: string, scenarioData: any) {
+export async function executeSimulatedSql(
+  sql: string,
+  scenarioData: any
+) {
   try {
-    const res = await fetch('/api/sql/query', {
+    const response = await fetch(apiUrl('/api/sql/query'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sql, scenarioData }),
     });
-    return await res.json();
-  } catch (e: any) {
-    return { error: e.message || 'Network error executing SQL' };
+
+    return await readJson<any>(response);
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Network error executing SQL',
+    };
   }
-}
+      }
+  
