@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { CurrencyRateData, Expense } from '../types';
-import { fetchCurrencyRates } from '../services/api';
+import { fetchCurrencyRates } from "./api";
 import { 
   Globe, 
   ArrowRightLeft, 
