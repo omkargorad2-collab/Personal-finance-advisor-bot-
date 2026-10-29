@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PersonaScenario } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { 
   X, 
   RotateCcw, 
