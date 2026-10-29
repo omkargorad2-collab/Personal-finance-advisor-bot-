@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FinancialAuditResult, PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal } from '../types';
 import { CURRENCY_SYMBOLS } from "./mockData";
-import { requestFinancialAnalysis } from '../services/api';
+import { requestFinancialAnalysis } from "./api";
 import { 
   FileText, 
   Printer, 
