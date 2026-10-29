@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BudgetCategory, Expense, PersonaScenario } from '../types';
 import { CURRENCY_SYMBOLS } from "./mockData";
-import { generateAiBudget } from '../services/api';
+import { generateAiBudget } from "./api";
 import { CircularProgressRing, CircularDonutChart } from './CircularCharts';
 import { 
   Layers, 
