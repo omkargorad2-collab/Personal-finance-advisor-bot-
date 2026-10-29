@@ -1,5 +1,5 @@
 import { PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 
 export interface ExpenseRemovalCandidate {
   expense: Expense;
