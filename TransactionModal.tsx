@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { COMMON_CATEGORIES, CURRENCY_SYMBOLS } from '../data/mockData';
+import { COMMON_CATEGORIES, CURRENCY_SYMBOLS } from "./mockData";
 import { Expense, Income, PersonaScenario } from '../types';
 import { X, DollarSign, Calendar, Tag, ShieldAlert, FileText, Sparkles, CheckCircle2, AlertCircle, Pencil } from 'lucide-react';
 
