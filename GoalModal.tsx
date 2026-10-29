@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SavingsGoal } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { X, Target, Calendar, DollarSign, Tag } from 'lucide-react';
 
 interface GoalModalProps {
