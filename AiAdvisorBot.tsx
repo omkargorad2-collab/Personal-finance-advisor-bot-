@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PersonaScenario, Income, Expense, BudgetCategory, SavingsGoal, AiChatMessage } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { sendAdvisorChat } from "./api";
 import { 
   Bot, 
