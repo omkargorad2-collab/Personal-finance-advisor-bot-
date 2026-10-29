@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SavingsGoal, PersonaScenario } from '../types';
-import { CURRENCY_SYMBOLS } from '../data/mockData';
+import { CURRENCY_SYMBOLS } from "./mockData";
 import { CircularProgressRing, GaugeMeter } from './CircularCharts';
 import confetti from 'canvas-confetti';
 import { 
